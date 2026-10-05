@@ -9,9 +9,9 @@ const PRINT_CSS = `
   ul, ol { padding-left: 18pt; margin: 0 0 6pt; }
   ul[data-type="taskList"] { list-style: none; padding-left: 0; }
   ul[data-type="taskList"] ul[data-type="taskList"] { padding-left: 18pt; }
-  li[data-type="taskItem"] { display: flex; gap: 8pt; align-items: flex-start; }
-  li[data-type="taskItem"] > label { padding-top: 2pt; }
-  li[data-type="taskItem"] > div { flex: 1; }
+  ul[data-type="taskList"] > li { display: flex; gap: 8pt; align-items: flex-start; }
+  ul[data-type="taskList"] > li > label { padding-top: 2pt; }
+  ul[data-type="taskList"] > li > div { flex: 1; }
   li[data-checked="true"] > div p { text-decoration: line-through; color: #777; }
   li > p { margin: 0 0 3pt; }
   pre { background: #f4f4f4; padding: 8pt 10pt; border-radius: 6pt; white-space: pre-wrap; }

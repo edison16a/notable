@@ -99,28 +99,28 @@
   margin-top: 0.3em;
 }
 
-.notable-prose li[data-type="taskItem"] {
+.notable-prose ul[data-type="taskList"] > li {
   display: flex;
   align-items: flex-start;
   gap: 0.65em;
 }
 
-.notable-prose li[data-type="taskItem"] + li[data-type="taskItem"] {
+.notable-prose ul[data-type="taskList"] > li + li {
   margin-top: 0.3em;
 }
 
-.notable-prose li[data-type="taskItem"] > label {
+.notable-prose ul[data-type="taskList"] > li > label {
   flex-shrink: 0;
   user-select: none;
   padding-top: 0.28em;
 }
 
-.notable-prose li[data-type="taskItem"] > div {
+.notable-prose ul[data-type="taskList"] > li > div {
   flex: 1;
   min-width: 0;
 }
 
-.notable-prose li[data-type="taskItem"] input[type="checkbox"] {
+.notable-prose ul[data-type="taskList"] > li input[type="checkbox"] {
   appearance: none;
   display: block;
   width: 16px;
@@ -132,7 +132,7 @@
   transition: background-color 120ms, border-color 120ms;
 }
 
-.notable-prose li[data-type="taskItem"] input[type="checkbox"]:checked {
+.notable-prose ul[data-type="taskList"] > li input[type="checkbox"]:checked {
   background-color: var(--accent);
   border-color: var(--accent);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 8.2 2.6 2.6L12 5.4'/%3E%3C/svg%3E");
