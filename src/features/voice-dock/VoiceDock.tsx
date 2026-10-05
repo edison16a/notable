@@ -13,6 +13,7 @@ import { displayTitle } from "@/features/tabs/lib/title";
 import { useTabsStore } from "@/features/tabs/store";
 import { TranscriptionPopup } from "@/features/transcription/components/TranscriptionPopup";
 import { useTranscriptionStore } from "@/features/transcription/store";
+import { useKeyboardInset } from "./useKeyboardInset";
 import { VoiceToolbar } from "./VoiceToolbar";
 
 const HINT_MS = 2200;
@@ -28,6 +29,7 @@ export function VoiceDock() {
   const dictationStatus = useDictationStore((state) => state.status);
   const transcriptionStatus = useTranscriptionStore((state) => state.status);
   const [hint, setHint] = useState<string | null>(null);
+  const keyboardInset = useKeyboardInset();
 
   useEffect(() => {
     void loadReadingPrefs();
@@ -57,7 +59,10 @@ export function VoiceDock() {
   };
 
   return (
-    <div className="pointer-events-none absolute inset-x-3 bottom-[max(20px,calc(env(safe-area-inset-bottom)+12px))] z-30 flex flex-col items-center gap-2.5 md:bottom-7">
+    <div
+      style={keyboardInset ? { transform: `translateY(-${keyboardInset}px)` } : undefined}
+      className="pointer-events-none absolute inset-x-3 bottom-[max(20px,calc(env(safe-area-inset-bottom)+12px))] z-30 flex flex-col items-center gap-2.5 md:bottom-7"
+    >
       <div className="pointer-events-auto flex w-full flex-col items-center gap-2.5">
         {dictationStatus !== "idle" ? (
           <DictationPopup />
