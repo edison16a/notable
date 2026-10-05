@@ -43,7 +43,11 @@ export function VoicePopup({ status, label, detail, analyser = null, progress = 
     <div
       role="status"
       aria-live="polite"
-      className={cn("glass glass-enter flex h-[60px] items-center gap-4 rounded-full py-2 pl-5 pr-2", className)}
+      className={cn(
+        // Phones get a full-width card with side margins, desktop a compact pill.
+        "glass glass-enter flex h-[60px] items-center gap-4 rounded-full py-2 pl-5 pr-2 max-md:w-full max-md:max-w-[440px]",
+        className,
+      )}
     >
       <div className="flex w-[124px] shrink-0 items-center justify-center">
         {status === "downloading" ? (
