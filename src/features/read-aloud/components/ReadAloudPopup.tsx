@@ -24,7 +24,7 @@ export function ReadAloudPopup() {
     status === "downloading"
       ? `${Math.round(downloadProgress * 100)}%`
       : status === "preparing"
-        ? "Generating the first sentence"
+        ? "Generating speech"
         : time;
 
   const action: PopupAction =
