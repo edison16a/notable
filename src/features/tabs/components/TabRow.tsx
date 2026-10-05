@@ -85,7 +85,13 @@ export function TabRow({ row, active, dragging, dropPosition, dragHandlers, ...a
       )}
 
       {!editing && (
-        <span className="flex opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 max-md:opacity-100">
+        // Touch screens have no hover, so the row actions show on the active row only.
+        <span
+          className={cn(
+            "flex opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100",
+            active && "max-md:opacity-100",
+          )}
+        >
           <IconButton size="sm" label="Delete tab" onClick={(event) => (event.stopPropagation(), actions.onDelete())}>
             <TrashIcon size={13} />
           </IconButton>
