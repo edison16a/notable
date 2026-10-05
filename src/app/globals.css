@@ -86,15 +86,9 @@
     box-shadow: var(--glass-shadow);
   }
 
-  /*
-   * Menus can open inside another glass panel, where a nested backdrop blur
-   * renders wrong in Chromium and lets the page show through. Menus skip the
-   * blur and use a nearly solid fill instead.
-   */
-  .glass-menu {
-    background: color-mix(in srgb, var(--bg) 96%, transparent);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  /* Menus hold small text, so they use a denser fill that stays readable even where blur is unavailable. */
+  .glass-dense {
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
   }
 
   .glass-enter {
