@@ -4,6 +4,7 @@ import { DocMenu } from "@/features/doc-menu/DocMenu";
 import { DocEditor } from "@/features/editor/components/DocEditor";
 import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
+import { DESKTOP_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { DropOverlay } from "@/features/transcription/components/DropOverlay";
 import { useAudioDrop } from "@/features/transcription/hooks/useAudioDrop";
 import { VoiceDock } from "@/features/voice-dock/VoiceDock";
@@ -23,16 +24,17 @@ export function Workspace() {
   const activeId = useTabsStore((state) => state.activeId);
   const { sidebarWidth, sidebarHidden, toggleSidebar } = useUiStore();
   const drop = useAudioDrop();
+  const isDesktop = useMediaQuery(DESKTOP_QUERY);
 
   return (
     <div className="flex h-dvh w-full overflow-hidden">
-      {!sidebarHidden && (
-        <aside style={{ width: sidebarWidth }} className="relative hidden shrink-0 border-r border-line md:block">
+      {isDesktop && !sidebarHidden && (
+        <aside style={{ width: sidebarWidth }} className="relative shrink-0 border-r border-line">
           <Sidebar onClose={toggleSidebar} />
           <ResizeHandle />
         </aside>
       )}
-      <MobileDrawer />
+      {!isDesktop && <MobileDrawer />}
 
       <main className="relative flex min-w-0 flex-1 flex-col" {...drop.handlers}>
         <TopBar actions={<DocMenu />} />
