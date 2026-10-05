@@ -1,3 +1,5 @@
+import { ClientApp } from "./ClientApp";
+
 export default function Home() {
-  return <main>Notable</main>;
+  return <ClientApp />;
 }
