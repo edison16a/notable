@@ -23,8 +23,6 @@ export function LoadedEditor({ docId, initialContent }: LoadedEditorProps) {
     extensions,
     content: initialContent ?? EMPTY_DOC,
     immediatelyRender: false,
-    // Put the cursor in the doc on desktop. On phones this would pop the keyboard on every tab switch.
-    autofocus: isTouchDevice() ? false : "end",
     editorProps: {
       attributes: { class: "notable-prose", spellcheck: "true", "aria-label": "Document" },
     },
@@ -35,6 +33,10 @@ export function LoadedEditor({ docId, initialContent }: LoadedEditorProps) {
   useEffect(() => {
     if (!editor) return;
     setEditor(editor);
+    // Put the cursor in the doc on desktop, unless the user is typing somewhere else (like
+    // renaming a tab). On phones focusing would pop the keyboard on every tab switch.
+    const typingElsewhere = document.activeElement instanceof HTMLInputElement;
+    if (!isTouchDevice() && !typingElsewhere) editor.commands.focus("end");
     return () => setEditor(null);
   }, [editor, setEditor]);
 
