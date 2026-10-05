@@ -19,6 +19,9 @@ export function startTabPersistence(): () => void {
     if (state.activeId !== previous.activeId && state.activeId) void setMeta(ACTIVE_TAB_KEY, state.activeId);
   });
 
+  // Save once up front so a first-launch blank tab exists on disk before any edit.
+  saveTree(useTabsStore.getState().tabs);
+
   const flush = () => saveTree.flush();
   window.addEventListener("pagehide", flush);
 
