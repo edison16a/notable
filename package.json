@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "A free, local-first docs app with on-device dictation, transcription, and read aloud.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
