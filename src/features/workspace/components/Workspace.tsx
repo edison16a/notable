@@ -8,6 +8,7 @@ import { DESKTOP_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { DropOverlay } from "@/features/transcription/components/DropOverlay";
 import { useAudioDrop } from "@/features/transcription/hooks/useAudioDrop";
 import { VoiceDock } from "@/features/voice-dock/VoiceDock";
+import { useServiceWorker } from "../hooks/useServiceWorker";
 import { useWorkspaceBoot } from "../hooks/useWorkspaceBoot";
 import { useWorkspaceShortcuts } from "../hooks/useWorkspaceShortcuts";
 import { useUiStore } from "../uiStore";
@@ -20,6 +21,7 @@ import { TopBar } from "./TopBar";
 export function Workspace() {
   useWorkspaceBoot();
   useWorkspaceShortcuts();
+  useServiceWorker();
   const ready = useTabsStore((state) => state.ready);
   const activeId = useTabsStore((state) => state.activeId);
   const { sidebarWidth, sidebarHidden, toggleSidebar } = useUiStore();
