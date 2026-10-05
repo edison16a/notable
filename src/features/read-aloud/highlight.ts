@@ -1,5 +1,5 @@
 import { Extension, type Editor } from "@tiptap/core";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import type { Node as PMNode } from "@tiptap/pm/model";
 
@@ -58,9 +58,13 @@ export const SpeechHighlightExtension = Extension.create({
         },
         props: {
           decorations: (state) => key.getState(state),
-          handleClick(_view, pos) {
-            clickHandler?.(pos);
-            return false;
+          handleClick(view, pos) {
+            if (!clickHandler) return false;
+            // Place the cursor ourselves before seeking. The seek redraws the highlight at once,
+            // and a redraw before ProseMirror reads the browser's new selection puts the old cursor back.
+            view.dispatch(view.state.tr.setSelection(TextSelection.near(view.state.doc.resolve(pos))));
+            clickHandler(pos);
+            return true;
           },
         },
       }),
