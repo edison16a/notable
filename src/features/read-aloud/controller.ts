@@ -38,7 +38,8 @@ const callbacks: PlayerCallbacks = {
   onError: (error) => {
     if (error.message === DOWNLOAD_CANCELLED) return stopReading();
     if (player === kokoro && engine?.loadFailed && session) return switchToFallback();
-    set({ status: "error", error: "Could not read this part aloud" });
+    const message = player === fallback ? "No voice available on this device" : "Could not read this part aloud";
+    set({ status: "error", error: message });
   },
   onEnd: () => stopReading(),
 };
