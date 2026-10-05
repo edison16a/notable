@@ -39,6 +39,8 @@ export function collectSentences(doc: PMNode, range?: { from: number; to: number
         start = Math.max(start, range.from - contentStart);
         end = Math.min(end, range.to - contentStart);
       }
+      // A block partly or wholly outside the selection can produce an empty or inverted span.
+      if (end <= start) return;
       const raw = text.slice(start, end);
       const trimmed = raw.trim();
       if (!trimmed) return;
