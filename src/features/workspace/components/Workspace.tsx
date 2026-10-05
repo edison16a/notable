@@ -3,6 +3,7 @@
 import { DocEditor } from "@/features/editor/components/DocEditor";
 import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
+import { VoiceDock } from "@/features/voice-dock/VoiceDock";
 import { useWorkspaceBoot } from "../hooks/useWorkspaceBoot";
 import { useWorkspaceShortcuts } from "../hooks/useWorkspaceShortcuts";
 import { useUiStore } from "../uiStore";
@@ -36,6 +37,7 @@ export function Workspace() {
             {ready && activeId && <DocEditor key={activeId} docId={activeId} />}
           </div>
         </div>
+        <VoiceDock />
       </main>
       <QuickSwitcher />
     </div>
