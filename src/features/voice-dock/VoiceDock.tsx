@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DictationPopup } from "@/features/dictation/components/DictationPopup";
+import { startDictation, stopDictation } from "@/features/dictation/controller";
+import { useDictationStore } from "@/features/dictation/store";
 import { useEditorStore } from "@/features/editor/editorStore";
 import { PlaybackBar } from "@/features/read-aloud/components/PlaybackBar";
 import { ReadAloudPopup } from "@/features/read-aloud/components/ReadAloudPopup";
@@ -20,6 +23,7 @@ const HINT_MS = 2200;
  */
 export function VoiceDock() {
   const readStatus = useReadAloudStore((state) => state.status);
+  const dictationStatus = useDictationStore((state) => state.status);
   const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,7 +38,9 @@ export function VoiceDock() {
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && useReadAloudStore.getState().status !== "idle") stopReading();
+      if (event.key !== "Escape") return;
+      if (useReadAloudStore.getState().status !== "idle") stopReading();
+      if (useDictationStore.getState().status !== "idle") void stopDictation();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -50,13 +56,15 @@ export function VoiceDock() {
   return (
     <div className="pointer-events-none absolute inset-x-3 bottom-[max(20px,calc(env(safe-area-inset-bottom)+12px))] z-30 flex flex-col items-center gap-2.5 md:bottom-7">
       <div className="pointer-events-auto flex w-full flex-col items-center gap-2.5">
-        {readStatus !== "idle" ? (
+        {dictationStatus !== "idle" ? (
+          <DictationPopup />
+        ) : readStatus !== "idle" ? (
           <>
             <ReadAloudPopup />
             <PlaybackBar />
           </>
         ) : (
-          <VoiceToolbar onDictate={() => setHint("Dictation is coming next")} onReadAloud={readAloud} hint={hint} />
+          <VoiceToolbar onDictate={() => void startDictation()} onReadAloud={readAloud} hint={hint} />
         )}
       </div>
     </div>
