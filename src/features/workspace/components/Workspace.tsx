@@ -1,6 +1,7 @@
 "use client";
 
 import { DocEditor } from "@/features/editor/components/DocEditor";
+import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
 import { useWorkspaceBoot } from "../hooks/useWorkspaceBoot";
 import { useWorkspaceShortcuts } from "../hooks/useWorkspaceShortcuts";
@@ -36,6 +37,7 @@ export function Workspace() {
           </div>
         </div>
       </main>
+      <QuickSwitcher />
     </div>
   );
 }
