@@ -1,44 +1,51 @@
 <p align="center">
-  <img src="public/logo.svg" width="72" alt="Notable logo" />
+  <img src="assets/brand/logo.svg" width="72" alt="Notable logo" />
 </p>
 
 <h1 align="center">Notable</h1>
 
 <p align="center">
-  <a href="https://github.com/edison16a/notable">View on GitHub</a>
+  A free, local-first docs app with dictation, audio transcription, and read aloud that all run on your device.
 </p>
 
-Notable is a free docs app that opens straight into the editor and can talk and listen. You keep notes and checklists in the same doc, dictate into it, turn an audio file into text, and have any doc read back to you in a natural voice.
-
-The voice models run inside your browser. There are no accounts, no servers, and no cost per use. Your docs are saved on your device, and you can export any of them to Markdown, Word, or PDF.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-A855F7" alt="License: MIT" /></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D20-A855F7" alt="Node 20 or newer" /></a>
+  <a href="#offline-and-mobile"><img src="https://img.shields.io/badge/platforms-desktop%20%7C%20mobile%20%7C%20PWA-A855F7" alt="Platforms: desktop, mobile, PWA" /></a>
+</p>
 
 ## Screenshots
 
-**The editor.** Docs live in a tree of tabs on the left. Typing `#` makes a heading and `[]` makes a checklist item.
-
-![The Notable editor with a week plan doc and the tab tree](docs/screenshots/editor.png)
-
-**Read aloud.** The current sentence is highlighted and the spoken word gets a stronger mark. The glass popup follows the playback volume, and the bar below it scrubs, skips, and changes speed or voice.
-
-![Read aloud with the sentence highlight, voice popup, and playback bar](docs/screenshots/read-aloud.png)
-
-**Dictation.** Speak, pause, and the text appears at the cursor one segment at a time.
-
-![Dictation inserting a sentence while the popup shows Listening](docs/screenshots/dictation.png)
-
-**Voice picker.** Eight voices grouped by accent and gender, each with a preview button.
-
-![The voice picker open above the playback bar](docs/screenshots/voice-picker.png)
-
-**On a phone.** The sidebar becomes a drawer and the voice buttons float above the keyboard.
-
-<p>
-  <img src="docs/screenshots/mobile.png" width="300" alt="Notable on a phone" />
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/mobile-sidebar.png" width="300" alt="The tab drawer on a phone" />
+<p align="center">
+  <img src="docs/screenshots/read-aloud.png" width="100%" alt="Read aloud with the sentence highlight, voice popup, and playback bar" />
 </p>
 
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/editor.png" alt="The editor with a week plan doc and the tab tree" /><br />
+      <sub>Notes and checklists in one doc, with nested tabs on the left</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/dictation.png" alt="Dictation inserting a sentence while the popup shows Listening" /><br />
+      <sub>Dictation types at the cursor after each pause</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/mobile.png" width="240" alt="Notable on a phone" /><br />
+      <sub>On a phone, the voice buttons float above the keyboard</sub>
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/screenshots/mobile-sidebar.png" width="240" alt="The tab drawer on a phone" /><br />
+      <sub>The sidebar becomes a slide-over drawer</sub>
+    </td>
+  </tr>
+</table>
+
 ## What it does
+
+Notable opens straight into the editor and can talk and listen. You keep notes and checklists in the same doc, dictate into it, turn an audio file into text, and have any doc read back to you in a natural voice. The voice models run inside your browser, so there are no accounts, no servers, and no cost per use. Your docs are saved on your device.
 
 - Opens into your last doc, with the tab tree exactly as you left it. A first launch opens one blank doc with the cursor ready.
 - Nested tabs to any depth. Fold them, drag them to reorder or nest, double-click to rename, and search them all with Cmd/Ctrl+K.
