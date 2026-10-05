@@ -59,7 +59,8 @@ export class KokoroEngine {
     const progress = new DownloadProgress();
     const off = this.client.on("progress", (event) => {
       const fraction = progress.update(event as ModelProgressEvent);
-      if (progress.downloading) this.onDownload?.(fraction);
+      // Only report real network downloads. A cached model loads with no progress events at all.
+      if (progress.downloading || fraction === 1) this.onDownload?.(fraction);
     });
     try {
       await this.client.call("load", { small: isTouchDevice() });

@@ -33,7 +33,8 @@ export class KokoroPlayer implements Player {
     this.audio.preservesPitch = true;
     this.audio.addEventListener("ended", () => this.onEnded());
     engine.onDownload = (fraction) => {
-      cb.onStatus("downloading");
+      // Once the files are in, the model still needs a moment to start, which is "preparing" to the user.
+      cb.onStatus(fraction >= 1 ? "preparing" : "downloading");
       cb.onDownload(fraction);
     };
   }
