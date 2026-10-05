@@ -24,6 +24,26 @@ function segmentSentences(text: string): TextSpan[] {
   return spans;
 }
 
+/** Titles and short forms that end in a period without ending the sentence. */
+const ABBREVIATION = /\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|etc|e\.g|i\.e|approx|no)\.\s*$/i;
+
+/**
+ * The segmenter (in browsers and Node alike) breaks after "Dr." and friends,
+ * which would make the voice pause mid-name. Rejoins those pieces.
+ */
+function mergeAbbreviations(spans: TextSpan[]): TextSpan[] {
+  const merged: TextSpan[] = [];
+  for (const span of spans) {
+    const previous = merged[merged.length - 1];
+    if (previous && ABBREVIATION.test(previous.text)) {
+      merged[merged.length - 1] = { start: previous.start, end: span.end, text: previous.text + span.text };
+    } else {
+      merged.push(span);
+    }
+  }
+  return merged;
+}
+
 /** Splits an overlong span at the last comma, semicolon, or space before the limit. */
 function splitLong(span: TextSpan): TextSpan[] {
   const parts: TextSpan[] = [];
@@ -54,7 +74,7 @@ function trimSpan(span: TextSpan): TextSpan | null {
  * available because it understands abbreviations far better than a regex.
  */
 export function splitSentences(text: string): TextSpan[] {
-  return segmentSentences(text)
+  return mergeAbbreviations(segmentSentences(text))
     .flatMap(splitLong)
     .map(trimSpan)
     .filter((span): span is TextSpan => span !== null);
