@@ -86,6 +86,14 @@
     box-shadow: var(--glass-shadow);
   }
 
+  /*
+   * Menus can open inside another glass panel, where backdrop blur only sees
+   * the parent and not the page. A nearly solid fill keeps them readable.
+   */
+  .glass-menu {
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+  }
+
   .glass-enter {
     animation: glass-in 200ms ease-out both;
   }

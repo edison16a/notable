@@ -45,7 +45,7 @@ export function Popover({ trigger, children, align = "end", side = "bottom", cla
         <div
           role="menu"
           className={cn(
-            "glass glass-enter absolute z-40 min-w-56 rounded-2xl p-1.5",
+            "glass glass-menu glass-enter absolute z-40 min-w-56 rounded-2xl p-1.5",
             align === "end" ? "right-0" : "left-0",
             side === "bottom" ? "top-full mt-2" : "bottom-full mb-2",
             className,
