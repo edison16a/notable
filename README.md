@@ -147,6 +147,8 @@ src/
     whisper/            Whisper worker, engine, and model settings
     workspace/          App shell: sidebar, drawer, top bar, shortcuts, boot
   lib/                  Small shared helpers and the typed worker RPC
+assets/
+  brand/                The Notable logo artwork
 public/
   sw.js                 Offline service worker
   worklets/             The microphone capture AudioWorklet
