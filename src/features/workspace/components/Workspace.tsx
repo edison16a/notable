@@ -1,5 +1,6 @@
 "use client";
 
+import { DocMenu } from "@/features/doc-menu/DocMenu";
 import { DocEditor } from "@/features/editor/components/DocEditor";
 import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
@@ -34,7 +35,7 @@ export function Workspace() {
       <MobileDrawer />
 
       <main className="relative flex min-w-0 flex-1 flex-col" {...drop.handlers}>
-        <TopBar />
+        <TopBar actions={<DocMenu />} />
         <div className="min-h-0 flex-1 overflow-y-auto" data-editor-scroll>
           <div className="mx-auto w-full max-w-[700px] px-5 pt-4 md:px-12 md:pt-16">
             {ready && activeId && <DocEditor key={activeId} docId={activeId} />}

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { requestPersistentStorage } from "@/features/storage/persistence";
 import { startTabPersistence } from "@/features/tabs/persist";
 import { useTabsStore } from "@/features/tabs/store";
+import { useWhisperSettings } from "@/features/whisper/settings";
 import { useUiStore } from "../uiStore";
 
 /**
@@ -17,7 +18,11 @@ export function useWorkspaceBoot() {
     let cancelled = false;
 
     void (async () => {
-      await Promise.all([useTabsStore.getState().hydrate(), useUiStore.getState().hydrate()]);
+      await Promise.all([
+        useTabsStore.getState().hydrate(),
+        useUiStore.getState().hydrate(),
+        useWhisperSettings.getState().hydrate(),
+      ]);
       if (cancelled) return;
       stop = startTabPersistence();
       void requestPersistentStorage();
