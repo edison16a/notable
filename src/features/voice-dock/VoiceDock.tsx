@@ -11,6 +11,8 @@ import { loadReadingPrefs, startReading, stopReading } from "@/features/read-alo
 import { useReadAloudStore } from "@/features/read-aloud/store";
 import { displayTitle } from "@/features/tabs/lib/title";
 import { useTabsStore } from "@/features/tabs/store";
+import { TranscriptionPopup } from "@/features/transcription/components/TranscriptionPopup";
+import { useTranscriptionStore } from "@/features/transcription/store";
 import { VoiceToolbar } from "./VoiceToolbar";
 
 const HINT_MS = 2200;
@@ -18,12 +20,13 @@ const HINT_MS = 2200;
 /**
  * Floats at the bottom center of the editor. Shows the voice buttons when
  * idle, and the matching popup (plus the playback bar when reading) while a
- * voice feature runs. Only one runs at a time, so this is the place that
- * decides which one is on screen. Esc stops whichever is active.
+ * voice feature runs. Only one popup shows at a time, so this is the place
+ * that decides which one is on screen. Esc stops dictation or reading.
  */
 export function VoiceDock() {
   const readStatus = useReadAloudStore((state) => state.status);
   const dictationStatus = useDictationStore((state) => state.status);
+  const transcriptionStatus = useTranscriptionStore((state) => state.status);
   const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,6 +61,8 @@ export function VoiceDock() {
       <div className="pointer-events-auto flex w-full flex-col items-center gap-2.5">
         {dictationStatus !== "idle" ? (
           <DictationPopup />
+        ) : transcriptionStatus !== "idle" ? (
+          <TranscriptionPopup />
         ) : readStatus !== "idle" ? (
           <>
             <ReadAloudPopup />

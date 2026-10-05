@@ -3,6 +3,8 @@
 import { DocEditor } from "@/features/editor/components/DocEditor";
 import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
+import { DropOverlay } from "@/features/transcription/components/DropOverlay";
+import { useAudioDrop } from "@/features/transcription/hooks/useAudioDrop";
 import { VoiceDock } from "@/features/voice-dock/VoiceDock";
 import { useWorkspaceBoot } from "../hooks/useWorkspaceBoot";
 import { useWorkspaceShortcuts } from "../hooks/useWorkspaceShortcuts";
@@ -19,6 +21,7 @@ export function Workspace() {
   const ready = useTabsStore((state) => state.ready);
   const activeId = useTabsStore((state) => state.activeId);
   const { sidebarWidth, sidebarHidden, toggleSidebar } = useUiStore();
+  const drop = useAudioDrop();
 
   return (
     <div className="flex h-dvh w-full overflow-hidden">
@@ -30,7 +33,7 @@ export function Workspace() {
       )}
       <MobileDrawer />
 
-      <main className="relative flex min-w-0 flex-1 flex-col">
+      <main className="relative flex min-w-0 flex-1 flex-col" {...drop.handlers}>
         <TopBar />
         <div className="min-h-0 flex-1 overflow-y-auto" data-editor-scroll>
           <div className="mx-auto w-full max-w-[700px] px-5 pt-4 md:px-12 md:pt-16">
@@ -38,6 +41,7 @@ export function Workspace() {
           </div>
         </div>
         <VoiceDock />
+        {drop.over && <DropOverlay />}
       </main>
       <QuickSwitcher />
     </div>
