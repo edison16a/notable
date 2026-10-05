@@ -7,6 +7,8 @@ import type { NextConfig } from "next";
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  agentRules: false,
+  devIndicators: false,
   turbopack: {
     resolveAlias: {
       sharp: "./src/lib/empty-module.ts",
