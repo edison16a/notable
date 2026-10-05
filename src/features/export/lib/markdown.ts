@@ -90,9 +90,7 @@ function blockToMarkdown(node: JSONContent, depth = 0): string {
 }
 
 export function docToMarkdown(doc: JSONContent | null | undefined): string {
-  const blocks = (doc?.content ?? []).map((node) => blockToMarkdown(node));
-  // Drop empty paragraphs at the edges but keep intentional spacing in between.
-  while (blocks.length && !blocks[blocks.length - 1].trim()) blocks.pop();
-  while (blocks.length && !blocks[0].trim()) blocks.shift();
+  // Empty paragraphs are only visual spacing in the editor. Markdown already separates blocks.
+  const blocks = (doc?.content ?? []).map((node) => blockToMarkdown(node)).filter((block) => block.trim());
   return `${blocks.join("\n\n")}\n`;
 }
