@@ -37,17 +37,19 @@ export function LevelBars({ mode, analyser, tone }: LevelBarsProps) {
     const color = getComputedStyle(canvas).getPropertyValue(tone === "accent" ? "--accent" : "--fg").trim();
     const style: BarStyle = { color, barWidth: 1.8, gap: 1.3, minHeight: mode === "flat" ? 1.8 : 3 };
     const reduced = prefersReducedMotion();
+    // Without an analyser (the fallback voice) there is no volume to follow, so pulse instead.
+    const motion: BarsMode = mode === "live" && !analyser ? "pulse" : mode;
     const spectrum = new Uint8Array(analyser?.frequencyBinCount ?? 0);
     let bars = new Array<number>(BAR_COUNT).fill(0);
     let frame = 0;
 
     const render = (now: number) => {
       let target: number[];
-      if (mode === "live" && analyser) {
+      if (motion === "live" && analyser) {
         analyser.getByteFrequencyData(spectrum);
         target = barsFromSpectrum(spectrum, BAR_COUNT);
       } else {
-        target = syntheticBars(mode, BAR_COUNT, now / 1000);
+        target = syntheticBars(motion, BAR_COUNT, now / 1000);
       }
 
       if (reduced) {
