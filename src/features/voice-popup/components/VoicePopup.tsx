@@ -37,7 +37,6 @@ interface VoicePopupProps {
  */
 export function VoicePopup({ status, label, detail, analyser = null, progress = 0, action, secondary, className }: VoicePopupProps) {
   const Icon = ACTION_ICONS[action.kind];
-  const dotMuted = status === "silent" || status === "paused" || status === "error";
 
   return (
     <div
@@ -60,12 +59,9 @@ export function VoicePopup({ status, label, detail, analyser = null, progress = 
       </div>
 
       <div className="min-w-[104px] max-w-[200px] flex-1">
-        <p className="flex items-center gap-1.5 text-[12px] font-medium leading-tight">
-          <span className={cn("size-1.5 shrink-0 rounded-full", dotMuted ? "bg-faint" : "bg-accent")} />
-          <span className="truncate">{label}</span>
-        </p>
+        <p className="truncate text-[12px] font-medium leading-tight">{label}</p>
         {(detail || secondary) && (
-          <p className="truncate pl-3 text-[11px] leading-tight text-muted tabular-nums">
+          <p className="truncate text-[11px] leading-tight text-muted tabular-nums">
             {secondary ? (
               <button type="button" onClick={secondary.onClick} className="underline underline-offset-2 hover:text-fg">
                 {secondary.label}
