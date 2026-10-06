@@ -204,3 +204,7 @@ Browsers reserve Cmd/Ctrl with T, W, and N, so tab actions use Alt.
 - **Browser speech recognition fallback** is left out. Chrome sends that audio to a server, which breaks the promise that nothing leaves the device.
 - **Languages** are English only in v1, using the English Whisper checkpoints.
 - **Theme** follows the system setting, light or dark.
+
+## License
+
+Notable is released under the [MIT License](LICENSE).
