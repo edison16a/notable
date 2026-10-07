@@ -57,6 +57,35 @@ describe("docToMarkdown", () => {
   });
 });
 
+describe("docToMarkdown edge cases", () => {
+  it("skips an empty heading", () => {
+    expect(docToMarkdown({ type: "doc", content: [{ type: "heading", attrs: { level: 1 } }, p(text("Body"))] })).toBe("Body\n");
+  });
+
+  it("keeps spaces outside bold so it still renders", () => {
+    expect(docToMarkdown({ type: "doc", content: [p(text("hi "), text("bold ", [{ type: "bold" }]), text("x"))] })).toBe("hi **bold** x\n");
+  });
+
+  it("escapes a paragraph that would otherwise become a heading, list, or quote", () => {
+    const out = docToMarkdown({ type: "doc", content: [p(text("# tag")), p(text("- dash")), p(text("2. two")), p(text("a <b> c"))] });
+    expect(out).toBe("\\# tag\n\n\\- dash\n\n\\2. two\n\na \\<b\\> c\n");
+  });
+
+  it("indents lists nested under numbered items by the marker width", () => {
+    const doc = {
+      type: "doc",
+      content: [
+        {
+          type: "orderedList",
+          attrs: { start: 1 },
+          content: [{ type: "listItem", content: [p(text("one")), { type: "bulletList", content: [{ type: "listItem", content: [p(text("nested"))] }] }] }],
+        },
+      ],
+    };
+    expect(docToMarkdown(doc)).toBe("1. one\n   - nested\n");
+  });
+});
+
 describe("safeFileName", () => {
   it("removes characters file systems reject", () => {
     expect(safeFileName('a/b:c*?"<>|d')).toBe("a b c d");
