@@ -27,12 +27,15 @@ export class KokoroPlayer implements Player {
   private gapTimer: ReturnType<typeof setTimeout> | undefined;
   private rate = 1;
   private lastWordStart = -1;
+  /** False once reading is stopped, so a model download still finishing cannot bring the popup back. */
+  private live = false;
 
   constructor(engine: KokoroEngine, private readonly cb: PlayerCallbacks, voice: string) {
     this.queue = new ClipQueue(engine, voice, () => this.emitTime());
     this.audio.preservesPitch = true;
     this.audio.addEventListener("ended", () => this.onEnded());
     engine.onDownload = (fraction) => {
+      if (!this.live) return;
       // Once the files are in, the model still needs a moment to start, which is "preparing" to the user.
       cb.onStatus(fraction >= 1 ? "preparing" : "downloading");
       cb.onDownload(fraction);
@@ -41,6 +44,7 @@ export class KokoroPlayer implements Player {
 
   load(sentences: SpeakableSentence[], startIndex: number) {
     this.halt();
+    this.live = true;
     this.queue.reset(sentences);
     this.index = startIndex;
     this.loadedIndex = -1;
@@ -101,6 +105,7 @@ export class KokoroPlayer implements Player {
   }
 
   stop() {
+    this.live = false;
     this.halt();
     this.queue.dispose();
     this.cb.onHighlight(null);

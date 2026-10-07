@@ -67,9 +67,10 @@ export async function startDictation() {
     // Ask for the mic first so the permission prompt appears right away, then fetch the model.
     mic = await openMicrophone(onChunk);
     if (current !== run) return release();
-    await loadWhisper((fraction) =>
-      set({ status: fraction >= 1 ? "preparing" : "downloading", downloadProgress: fraction }),
-    );
+    await loadWhisper((fraction) => {
+      // Progress can still arrive after the user cancelled. It must not bring the popup back.
+      if (current === run) set({ status: fraction >= 1 ? "preparing" : "downloading", downloadProgress: fraction });
+    });
     if (current !== run) return release();
   } catch (error) {
     release();

@@ -27,7 +27,9 @@ export async function transcribeFile(file: File) {
   try {
     const samples = await decodeAudioFile(file);
     if (cancelled()) return;
-    await loadWhisper((fraction) => set({ status: fraction >= 1 ? "decoding" : "downloading", progress: fraction }));
+    await loadWhisper((fraction) => {
+      if (!cancelled()) set({ status: fraction >= 1 ? "decoding" : "downloading", progress: fraction });
+    });
     if (cancelled()) return;
 
     const timestamps = useWhisperSettings.getState().timestamps;
