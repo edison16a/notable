@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type DragEvent } from "react";
+import { useEffect, useState, type DragEvent } from "react";
 import { transcribeFile } from "../controller";
 
 const hasFiles = (event: DragEvent) => Array.from(event.dataTransfer.types).includes("Files");
@@ -11,6 +11,19 @@ const hasFiles = (event: DragEvent) => Array.from(event.dataTransfer.types).incl
  */
 export function useAudioDrop() {
   const [over, setOver] = useState(false);
+
+  // A file dropped outside the editor (on the sidebar, say) would make the browser open it and leave the app.
+  useEffect(() => {
+    const block = (event: globalThis.DragEvent) => {
+      if (event.dataTransfer && Array.from(event.dataTransfer.types).includes("Files")) event.preventDefault();
+    };
+    window.addEventListener("dragover", block);
+    window.addEventListener("drop", block);
+    return () => {
+      window.removeEventListener("dragover", block);
+      window.removeEventListener("drop", block);
+    };
+  }, []);
 
   const handlers = {
     onDragOver(event: DragEvent<HTMLElement>) {
