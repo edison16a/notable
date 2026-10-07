@@ -31,9 +31,18 @@ export const useTabsStore = create<TabsState>((set, get) => ({
   activeId: null,
 
   async hydrate() {
-    let tabs = await loadTabs();
+    let tabs: tree.Tab[] = [];
+    let savedActive: string | undefined;
+    try {
+      tabs = await loadTabs();
+      savedActive = await getMeta<string>(ACTIVE_TAB_KEY);
+    } catch {
+      // Storage can be blocked (some private windows). Notable still works, it just will not remember anything.
+    }
+    // Another window may have removed a parent while its children were still being written. Lift those to the top level.
+    const ids = new Set(tabs.map((tab) => tab.id));
+    tabs = tabs.map((tab) => (tab.parentId && !ids.has(tab.parentId) ? { ...tab, parentId: null } : tab));
     if (!tabs.length) tabs = [tree.createTab(createId(), null, 0)];
-    const savedActive = await getMeta<string>(ACTIVE_TAB_KEY);
     const activeId = tabs.some((tab) => tab.id === savedActive) ? savedActive! : (tree.visibleRows(tabs)[0]?.tab.id ?? tabs[0].id);
     // Folds are restored exactly as they were left, even if the active doc sits inside a folded tab.
     set({ tabs, activeId, ready: true });
