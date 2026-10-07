@@ -52,6 +52,9 @@ export class WorkerClient {
       const error = new Error(event.message || "The voice model stopped unexpectedly");
       for (const { reject } of this.pending.values()) reject(error);
       this.pending.clear();
+      // A worker that failed to start or crashed never answers again. Drop it so the next call starts a fresh one.
+      worker.terminate();
+      if (this.worker === worker) this.worker = null;
     };
     this.worker = worker;
     return worker;
