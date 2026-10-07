@@ -21,7 +21,9 @@ export function useDocAutosave(editor: Editor | null, docId: string) {
   const save = useMemo(
     () =>
       debounce((json: JSONContent) => {
-        void saveDoc(docId, json);
+        // A deleted tab's doc must not be written back by the editor's last flush.
+        if (!useTabsStore.getState().tabs.some((tab) => tab.id === docId)) return;
+        saveDoc(docId, json).catch((error) => console.warn("Could not save the doc", error));
         setDerivedTitle(docId, deriveTitle(json));
       }, SAVE_DELAY_MS),
     [docId, setDerivedTitle],
