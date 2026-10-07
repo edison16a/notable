@@ -44,7 +44,7 @@ export function VoicePopup({ status, label, detail, analyser = null, progress = 
       aria-live="polite"
       className={cn(
         // Phones get a full-width card with side margins, desktop a compact pill.
-        "glass glass-enter flex h-[60px] items-center gap-4 rounded-full py-2 pl-5 pr-2 max-md:w-full max-md:max-w-[440px]",
+        "glass glass-dense glass-enter flex h-[60px] items-center gap-4 rounded-full py-2 pl-5 pr-2 max-md:w-full max-md:max-w-[440px]",
         className,
       )}
     >

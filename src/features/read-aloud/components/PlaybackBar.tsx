@@ -20,7 +20,7 @@ export function PlaybackBar() {
   const playing = status === "reading" || status === "preparing" || status === "downloading";
 
   return (
-    <div className="glass glass-enter flex h-14 w-full max-w-[560px] items-center gap-1.5 rounded-full px-2 max-sm:gap-1">
+    <div className="glass glass-dense glass-enter flex h-14 w-full max-w-[560px] items-center gap-1.5 rounded-full px-2 max-sm:gap-1">
       <IconButton label="Previous sentence" onClick={previousSentence}>
         <SkipBackIcon />
       </IconButton>
