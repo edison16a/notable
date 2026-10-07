@@ -14,6 +14,8 @@ import {
 const NUMBERED = "numbered";
 const HEADINGS = [HeadingLevel.HEADING_1, HeadingLevel.HEADING_2, HeadingLevel.HEADING_3];
 const INDENT_TWIPS = 360;
+const NUMBERED_LEVELS = 6;
+const LAST_NUMBERED_LEVEL = NUMBERED_LEVELS - 1;
 
 /**
  * Builds a Word file in the browser. Headings map to Word's heading styles,
@@ -35,8 +37,10 @@ class DocxBuilder {
         bold: has("bold"),
         italics: has("italic"),
         strike: strike || has("strike"),
+        // docx treats an empty object as a plain single underline.
+        underline: has("underline") || link ? {} : undefined,
+        color: link ? "0563C1" : undefined,
         font: has("code") ? "Consolas" : undefined,
-        style: link ? "Hyperlink" : undefined,
       });
       return link ? [new ExternalHyperlink({ link: String(link.attrs?.href ?? ""), children: [run] })] : [run];
     });
@@ -55,9 +59,14 @@ class DocxBuilder {
       case "blockquote":
         return (node.content ?? []).flatMap((child) => this.blocks(child, depth + 1));
       case "codeBlock":
+        // A newline inside a single TextRun collapses to a space in Word, so every line becomes its own run.
         return [
           new Paragraph({
-            children: [new TextRun({ text: (node.content ?? []).map((child) => child.text ?? "").join(""), font: "Consolas" })],
+            children: (node.content ?? [])
+              .map((child) => child.text ?? "")
+              .join("")
+              .split("\n")
+              .map((line, index) => new TextRun({ text: line, font: "Consolas", break: index ? 1 : undefined })),
           }),
         ];
       case "horizontalRule":
@@ -79,9 +88,10 @@ class DocxBuilder {
           children: [new CheckBox({ checked }), new TextRun(" "), ...this.runs(first?.content, checked)],
         });
       } else if (list.type === "orderedList") {
-        head = new Paragraph({ numbering: { reference: NUMBERED, level: depth, instance }, children: this.runs(first?.content) });
+        // Word has a fixed number of list levels, so very deep nesting stops indenting further.
+        head = new Paragraph({ numbering: { reference: NUMBERED, level: Math.min(depth, LAST_NUMBERED_LEVEL), instance }, children: this.runs(first?.content) });
       } else {
-        head = new Paragraph({ bullet: { level: depth }, children: this.runs(first?.content) });
+        head = new Paragraph({ bullet: { level: Math.min(depth, 8) }, children: this.runs(first?.content) });
       }
       return [head, ...rest.flatMap((child) => this.blocks(child, depth + 1))];
     });
@@ -96,7 +106,7 @@ export async function docToDocx(doc: JSONContent | null | undefined): Promise<Bl
       config: [
         {
           reference: NUMBERED,
-          levels: Array.from({ length: 6 }, (_, level) => ({
+          levels: Array.from({ length: NUMBERED_LEVELS }, (_, level) => ({
             level,
             format: LevelFormat.DECIMAL,
             text: `%${level + 1}.`,
