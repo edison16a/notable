@@ -45,13 +45,6 @@ export const CloseIcon = (p: IconProps) => (
   </Icon>
 );
 
-export const CheckCircleIcon = (p: IconProps) => (
-  <Icon {...p}>
-    <circle cx="12" cy="12" r="8.5" />
-    <path d="m8.5 12.2 2.4 2.3 4.6-4.8" />
-  </Icon>
-);
-
 export const SearchIcon = (p: IconProps) => (
   <Icon {...p}>
     <circle cx="11" cy="11" r="6.5" />
