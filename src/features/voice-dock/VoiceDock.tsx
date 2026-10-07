@@ -35,6 +35,18 @@ export function VoiceDock() {
     void loadReadingPrefs();
   }, []);
 
+  // Dictation types at the cursor and read aloud highlights by document position, so both belong to one doc.
+  // Switching or deleting tabs ends them rather than letting them act on the wrong doc.
+  useEffect(
+    () =>
+      useTabsStore.subscribe((state, previous) => {
+        if (state.activeId === previous.activeId) return;
+        stopReading();
+        if (useDictationStore.getState().status !== "idle") void stopDictation();
+      }),
+    [],
+  );
+
   useEffect(() => {
     if (!hint) return;
     const timer = setTimeout(() => setHint(null), HINT_MS);

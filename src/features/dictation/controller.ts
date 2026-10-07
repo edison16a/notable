@@ -39,11 +39,13 @@ function onChunk(chunk: Float32Array) {
 
 function enqueue(segment: Float32Array, sampleRate: number) {
   const audio = resample(segment, sampleRate, WHISPER_SAMPLE_RATE);
+  // Remember the doc this was spoken into. If the user has moved on by the time Whisper answers, the text
+  // goes to the original editor (or is dropped if it is gone) instead of landing in a different doc.
+  const editor = useEditorStore.getState().editor;
   pending++;
   queue = queue
     .then(async () => {
       const { text } = await transcribe(audio);
-      const editor = useEditorStore.getState().editor;
       if (editor) insertAtCursor(editor, cleanTranscript(text));
     })
     .catch(() => undefined)
