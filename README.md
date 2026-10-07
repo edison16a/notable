@@ -15,7 +15,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-A855F7" alt="License: MIT" /></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D20-A855F7" alt="Node 20 or newer" /></a>
-  <a href="#offline-and-mobile"><img src="https://img.shields.io/badge/platforms-desktop%20%7C%20mobile%20%7C%20PWA-A855F7" alt="Platforms: desktop, mobile, PWA" /></a>
+  <a href="#offline-and-install"><img src="https://img.shields.io/badge/platforms-desktop%20%7C%20PWA-A855F7" alt="Platforms: desktop, PWA" /></a>
 </p>
 
 ## Screenshots
@@ -37,12 +37,12 @@
   </tr>
   <tr>
     <td width="50%" align="center">
-      <img src="docs/screenshots/mobile.png" width="240" alt="Notable on a phone" /><br />
-      <sub>On a phone, the voice buttons float above the keyboard</sub>
+      <img src="docs/screenshots/voice-picker.png" alt="The voice picker open above the playback bar" /><br />
+      <sub>Eight voices grouped by accent and gender, each with a preview</sub>
     </td>
     <td width="50%" align="center">
-      <img src="docs/screenshots/mobile-sidebar.png" width="240" alt="The tab drawer on a phone" /><br />
-      <sub>The sidebar becomes a slide-over drawer</sub>
+      <img src="docs/screenshots/quick-switcher.png" alt="The quick switcher searching doc titles" /><br />
+      <sub>Cmd/Ctrl+K searches every doc and unfolds the tree to it</sub>
     </td>
   </tr>
 </table>
@@ -59,7 +59,8 @@ Notable opens straight into the editor and can talk and listen. You keep notes a
 - Dictation with Whisper that types into the doc after each pause.
 - Audio file transcription (mp3, m4a, wav) into a new tab, with optional timestamps.
 - Export to Markdown, Word, or PDF, or download every doc at once as a zip.
-- Works offline after the first visit, and installs to a phone's home screen.
+- Works offline after the first visit, and can be installed from the browser as a desktop app.
+- Built for computers. Phones and tablets see a short notice instead of the app.
 
 ## How it works
 
@@ -98,7 +99,7 @@ The popup is one presentational component. Dictation, transcription, and read al
 
 Each model downloads once, with a progress bar, and Transformers.js keeps it in the browser cache. WebGPU is used when the browser can provide an adapter, otherwise WASM. Kokoro uses full precision weights on WebGPU and 8-bit weights on WASM.
 
-Phones always use the 8-bit models on WASM, which keeps memory near 100 MB, and Whisper is unloaded when dictation stops. On cellular data, the first download of each model asks before starting.
+If the browser reports a cellular connection (a tethered laptop, for example), the first download of each model asks before starting.
 
 ### Storage and export
 
@@ -109,9 +110,11 @@ Docs, the tab tree, and settings live in IndexedDB through [Dexie](https://dexie
 - **PDF** uses a print-friendly layout and the browser's print dialog, so the text stays selectable.
 - **Export all** downloads a zip of Markdown files laid out in folders that match the tab tree. Local docs vanish if browser data is cleared, so this is your backup.
 
-### Offline and mobile
+### Offline and install
 
-A small service worker caches the app shell and the ONNX runtime files, so Notable works offline after the first visit. Worker scripts skip that cache on purpose: Turbopack starts every worker from one shared script and passes the chunk list in the URL fragment, which the Cache API ignores. The manifest makes Notable installable, and phones get a one-time tip to add it to the home screen, since browsers are less likely to clear storage for installed apps.
+A small service worker caches the app shell and the ONNX runtime files, so Notable works offline after the first visit. Worker scripts skip that cache on purpose: Turbopack starts every worker from one shared script and passes the chunk list in the URL fragment, which the Cache API ignores. The manifest lets browsers install Notable as a desktop app, and browsers are less likely to clear storage for installed apps.
+
+Notable is built for computers. A device whose main input is a finger (a phone or tablet) gets one line saying so, and the app, its models, and its storage are never loaded there.
 
 ## Tech stack
 
