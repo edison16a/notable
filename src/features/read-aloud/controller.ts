@@ -83,6 +83,8 @@ export function startReading(editor: Editor, title: string): boolean {
   if (!sentences.length) return false;
 
   player?.stop();
+  // A failed load may have been a dropped connection. Try Kokoro again each time before settling for the browser voice.
+  if (engine) engine.loadFailed = false;
   player = ensurePlayer();
   if (player === kokoro) void connectAnalyser(kokoro.audio);
   session = { sentences, title };
@@ -136,14 +138,26 @@ export function setReadingVoice(voice: string) {
   void savePrefs();
 }
 
+let previewAudio: HTMLAudioElement | null = null;
+
 /** Plays a short sample of a voice from the picker. Shares the cache, so a second preview is instant. */
 export async function previewVoice(voice: string, name: string): Promise<void> {
   if (!engine || engine.loadFailed) return;
   const clip = await engine.synthesize(`Hi, I'm ${name}. This is how I sound reading your notes.`, voice);
+  // One preview at a time: starting another cuts the first off.
+  previewAudio?.pause();
   const url = URL.createObjectURL(clip.blob);
   const audio = new Audio(url);
-  audio.addEventListener("ended", () => URL.revokeObjectURL(url), { once: true });
-  await audio.play();
+  previewAudio = audio;
+  const release = () => URL.revokeObjectURL(url);
+  audio.addEventListener("ended", release, { once: true });
+  audio.addEventListener("pause", release, { once: true });
+  try {
+    await audio.play();
+  } catch (error) {
+    release();
+    throw error;
+  }
 }
 
 async function savePrefs() {
