@@ -1,4 +1,5 @@
 import { debounce } from "@/lib/debounce";
+import { onPageLeave } from "@/lib/pageLifecycle";
 import { saveTabs, setMeta } from "@/features/storage/repository";
 import { ACTIVE_TAB_KEY, useTabsStore } from "./store";
 
@@ -22,12 +23,11 @@ export function startTabPersistence(): () => void {
   // Save once up front so a first-launch blank tab exists on disk before any edit.
   saveTree(useTabsStore.getState().tabs);
 
-  const flush = () => saveTree.flush();
-  window.addEventListener("pagehide", flush);
+  const stopWatching = onPageLeave(() => saveTree.flush());
 
   return () => {
-    flush();
+    saveTree.flush();
     unsubscribe();
-    window.removeEventListener("pagehide", flush);
+    stopWatching();
   };
 }
