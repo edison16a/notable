@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://freenotable.vercel.app/"><strong>Try it live at freenotable.vercel.app</strong></a>
+  <a href="https://freenotable.vercel.app/"><strong>https://freenotable.vercel.app</strong></a>
 </p>
 
 <p align="center">
