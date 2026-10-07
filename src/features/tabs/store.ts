@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { JSONContent } from "@tiptap/core";
 import { createId } from "@/lib/id";
-import { getMeta, loadTabs, saveDoc } from "@/features/storage/repository";
+import { getMeta, loadDoc, loadTabs, saveDoc } from "@/features/storage/repository";
 import { deriveTitle } from "./lib/title";
 import * as tree from "./lib/tree";
 
@@ -85,6 +85,11 @@ export const useTabsStore = create<TabsState>((set, get) => ({
     const trimmed = title.trim();
     // Clearing the name hands the title back to the doc's first line.
     set((state) => ({ tabs: tree.updateTab(state.tabs, id, { title: trimmed, customTitle: trimmed.length > 0 }) }));
+    if (!trimmed) {
+      void loadDoc(id)
+        .then((doc) => get().setDerivedTitle(id, deriveTitle(doc)))
+        .catch(() => undefined);
+    }
   },
 
   setDerivedTitle(id, title) {
