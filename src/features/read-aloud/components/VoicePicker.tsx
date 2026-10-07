@@ -62,7 +62,9 @@ export function VoicePicker() {
                   title="Preview"
                   onClick={() => {
                     setPreviewing(option.id);
-                    previewVoice(option.id, option.name).finally(() => setPreviewing(null));
+                    previewVoice(option.id, option.name)
+                      .catch(() => undefined)
+                      .finally(() => setPreviewing(null));
                   }}
                   className={cn("flex size-6 items-center justify-center rounded-md text-muted hover:bg-line hover:text-fg", previewing === option.id && "animate-pulse text-accent")}
                 >
