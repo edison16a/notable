@@ -18,7 +18,8 @@ export function useWorkspaceBoot() {
     let cancelled = false;
 
     void (async () => {
-      await Promise.all([
+      // allSettled so one store failing to load never stops the rest, or saving, from starting.
+      await Promise.allSettled([
         useTabsStore.getState().hydrate(),
         useUiStore.getState().hydrate(),
         useWhisperSettings.getState().hydrate(),

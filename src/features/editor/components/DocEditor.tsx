@@ -15,9 +15,11 @@ export function DocEditor({ docId }: { docId: string }) {
 
   useEffect(() => {
     let alive = true;
-    loadDoc(docId).then((loaded) => {
-      if (alive) setContent(loaded);
-    });
+    loadDoc(docId)
+      .catch(() => null)
+      .then((loaded) => {
+        if (alive) setContent(loaded);
+      });
     return () => {
       alive = false;
     };
