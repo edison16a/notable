@@ -54,7 +54,7 @@ export class KokoroPlayer implements Player {
   play() {
     this.wantPlaying = true;
     if (this.loadedIndex === this.index && !this.audio.ended && this.audio.src) {
-      void this.audio.play().then(() => this.startTicking());
+      this.audio.play().then(() => this.startTicking(), () => this.pause());
       this.cb.onStatus("reading");
     } else {
       void this.playFrom(this.audio.ended ? this.index + 1 : this.index, 0);

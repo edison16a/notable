@@ -19,6 +19,8 @@ const LOOKAHEAD = 2;
 export class ClipQueue {
   items: QueueItem[] = [];
   private voice: string;
+  /** Bumped whenever audio is discarded, so a clip that finishes late is dropped instead of leaking a URL. */
+  private generation = 0;
 
   constructor(
     private readonly engine: KokoroEngine,
@@ -38,8 +40,10 @@ export class ClipQueue {
     const item = this.items[index];
     if (!item) return Promise.reject(new Error("No sentence there"));
     const voice = this.voice;
+    const generation = this.generation;
     item.pending ??= this.engine.synthesize(item.text, voice).then(
       (clip) => {
+        if (generation !== this.generation) throw new Error("Reading was stopped");
         // The voice may have changed while this was generating. Drop the stale clip.
         if (voice !== this.voice) return this.url(index);
         item.duration = clip.duration;
@@ -72,6 +76,7 @@ export class ClipQueue {
   }
 
   dispose() {
+    this.generation++;
     for (const item of this.items) if (item.url) URL.revokeObjectURL(item.url);
   }
 }
