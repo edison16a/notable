@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <a href="https://freenotable.vercel.app/"><strong>Try it live at freenotable.vercel.app</strong></a>
+</p>
+
+<p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-A855F7" alt="License: MIT" /></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D20-A855F7" alt="Node 20 or newer" /></a>
   <a href="#offline-and-mobile"><img src="https://img.shields.io/badge/platforms-desktop%20%7C%20mobile%20%7C%20PWA-A855F7" alt="Platforms: desktop, mobile, PWA" /></a>
@@ -182,7 +186,7 @@ Chrome and Edge give the best performance because they support WebGPU. Safari an
 
 The `.npmrc` skips the native `onnxruntime-node` download that Transformers.js pulls in, because Notable only runs models in the browser.
 
-To deploy, import the repo into [Vercel](https://vercel.com). There are no environment variables and no backend.
+To deploy your own copy, import the repo into [Vercel](https://vercel.com). There are no environment variables and no backend.
 
 ## Keyboard shortcuts
 
