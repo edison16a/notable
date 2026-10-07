@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { JSONContent } from "@tiptap/core";
-import { loadDoc } from "@/features/storage/repository";
+import { loadDoc, saveDoc } from "@/features/storage/repository";
+import { clearUnsaved, readUnsaved } from "@/features/storage/unsaved";
 import { LoadedEditor } from "./LoadedEditor";
 
 /**
@@ -17,8 +18,11 @@ export function DocEditor({ docId }: { docId: string }) {
     let alive = true;
     loadDoc(docId)
       .catch(() => null)
-      .then((loaded) => {
-        if (alive) setContent(loaded);
+      .then((stored) => {
+        // Text parked at the last page leave is newer than whatever the database holds.
+        const parked = readUnsaved(docId);
+        if (parked) saveDoc(docId, parked).then(() => clearUnsaved(docId), () => undefined);
+        if (alive) setContent(parked ?? stored);
       });
     return () => {
       alive = false;
