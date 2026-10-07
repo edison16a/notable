@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getMeta, setMeta } from "@/features/storage/repository";
+import { debounce } from "@/lib/debounce";
 
 export const SIDEBAR_MIN = 200;
 export const SIDEBAR_MAX = 440;
@@ -26,10 +27,11 @@ interface UiState extends SavedUi {
 const clampWidth = (width: number) => Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, Math.round(width)));
 
 export const useUiStore = create<UiState>((set, get) => {
-  const persist = () => {
+  // Resizing fires on every pointer move, so saving waits until the drag settles.
+  const persist = debounce(() => {
     const { sidebarWidth, sidebarHidden } = get();
-    void setMeta(UI_KEY, { sidebarWidth, sidebarHidden } satisfies SavedUi);
-  };
+    setMeta(UI_KEY, { sidebarWidth, sidebarHidden } satisfies SavedUi).catch(() => undefined);
+  }, 300);
 
   return {
     sidebarWidth: SIDEBAR_DEFAULT,
