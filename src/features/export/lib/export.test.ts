@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { unzipSync, strFromU8 } from "fflate";
+import { docToDocx } from "./docx";
 import { createTab } from "@/features/tabs/lib/tree";
 import { safeFileName } from "./files";
 import { docToMarkdown } from "./markdown";
@@ -112,5 +113,22 @@ describe("export all", () => {
       const files = unzipSync(new Uint8Array(buffer));
       expect(strFromU8(files["Planning/Week plan.md"])).toBe("Hi\n");
     });
+  });
+});
+
+describe("docToDocx", () => {
+  it("keeps code lines, underline, and link styling", async () => {
+    const doc = {
+      type: "doc",
+      content: [
+        p(text("u", [{ type: "underline" }]), text("link", [{ type: "link", attrs: { href: "https://x.dev" } }])),
+        { type: "codeBlock", content: [text("a\nb")] },
+      ],
+    };
+    const blob = await docToDocx(doc);
+    const xml = strFromU8(unzipSync(new Uint8Array(await blob.arrayBuffer()))["word/document.xml"]);
+    expect(xml).toContain("<w:u ");
+    expect(xml).toContain("0563C1");
+    expect(xml.match(/<w:br\/>/g)).toHaveLength(1);
   });
 });
