@@ -67,16 +67,22 @@ export async function startDictation() {
 
   try {
     // Ask for the mic first so the permission prompt appears right away, then fetch the model.
-    mic = await openMicrophone(onChunk);
-    if (current !== run) return release();
+    const opened = await openMicrophone(onChunk);
+    if (current !== run) {
+      // Stopped while the permission prompt was open. Release this mic only, never a newer run's.
+      opened.stop();
+      return;
+    }
+    mic = opened;
     await loadWhisper((fraction) => {
       // Progress can still arrive after the user cancelled. It must not bring the popup back.
       if (current === run) set({ status: fraction >= 1 ? "preparing" : "downloading", downloadProgress: fraction });
     });
-    if (current !== run) return release();
-  } catch (error) {
-    release();
+    // Stopping already released the mic, so there is nothing to clean up here.
     if (current !== run) return;
+  } catch (error) {
+    if (current !== run) return;
+    release();
     if ((error as Error).message === DOWNLOAD_CANCELLED) return set({ status: "idle" });
     const blocked = error instanceof MicrophoneError && error.reason === "blocked";
     return set({

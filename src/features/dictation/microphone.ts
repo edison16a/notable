@@ -37,7 +37,13 @@ export async function openMicrophone(onChunk: (samples: Float32Array) => void): 
     throw new MicrophoneError("Could not open the microphone", "unknown");
   }
 
-  await ctx.audioWorklet.addModule("/worklets/pcm-capture.js");
+  try {
+    await ctx.audioWorklet.addModule("/worklets/pcm-capture.js");
+  } catch {
+    // Without the worklet there is nothing to do with the stream. Do not leave the mic light on.
+    stream.getTracks().forEach((track) => track.stop());
+    throw new MicrophoneError("Could not start the microphone", "unknown");
+  }
   const source = ctx.createMediaStreamSource(stream);
   const analyser = createLevelAnalyser(ctx);
   const capture = new AudioWorkletNode(ctx, "pcm-capture");
