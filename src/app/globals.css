@@ -91,9 +91,9 @@
     background: color-mix(in srgb, var(--bg) 94%, transparent);
   }
 
-  /* Panels that sit over page text (menus, the switcher, dialogs) are nearly solid, so nothing behind them competes with their own text. */
+  /* Panels that sit over page text (menus, the switcher, dialogs) are opaque, so nothing behind them competes with their own text. They keep the glass border, shadow, and rounded shape. */
   .glass-solid {
-    background: color-mix(in srgb, var(--bg) 98%, transparent);
+    background: var(--bg);
   }
 
   .glass-enter {
