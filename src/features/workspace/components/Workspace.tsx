@@ -2,6 +2,7 @@
 
 import { DocMenu } from "@/features/doc-menu/DocMenu";
 import { DocEditor } from "@/features/editor/components/DocEditor";
+import { DownloadPrompt } from "@/features/models/DownloadPrompt";
 import { QuickSwitcher } from "@/features/switcher/components/QuickSwitcher";
 import { useTabsStore } from "@/features/tabs/store";
 import { DESKTOP_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
@@ -49,6 +50,7 @@ export function Workspace() {
         {drop.over && <DropOverlay />}
       </main>
       <QuickSwitcher />
+      <DownloadPrompt />
     </div>
   );
 }
