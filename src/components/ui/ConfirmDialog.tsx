@@ -35,7 +35,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, o
       onClick={(event) => {
         if (event.target === ref.current) onCancel();
       }}
-      className="glass glass-enter m-auto w-[min(360px,calc(100vw-32px))] rounded-2xl p-0 text-fg backdrop:bg-black/20"
+      className="glass glass-solid glass-enter m-auto w-[min(360px,calc(100vw-32px))] rounded-2xl p-0 text-fg backdrop:bg-black/20"
     >
       <div className="p-5">
         <h2 className="text-[15px] font-semibold">{title}</h2>

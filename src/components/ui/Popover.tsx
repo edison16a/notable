@@ -74,7 +74,7 @@ export function Popover({ trigger, children, align = "end", side = "bottom", cla
             ref={panel}
             role="menu"
             style={style}
-            className={cn("glass glass-dense glass-enter z-50 min-w-56 rounded-2xl p-1.5 text-fg", className)}
+            className={cn("glass glass-solid glass-enter z-50 min-w-56 rounded-2xl p-1.5 text-fg", className)}
           >
             {children(close)}
           </div>,

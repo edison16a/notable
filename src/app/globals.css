@@ -91,6 +91,11 @@
     background: color-mix(in srgb, var(--bg) 94%, transparent);
   }
 
+  /* Panels that sit over page text (menus, the switcher, dialogs) are nearly solid, so nothing behind them competes with their own text. */
+  .glass-solid {
+    background: color-mix(in srgb, var(--bg) 98%, transparent);
+  }
+
   .glass-enter {
     animation: glass-in 200ms ease-out both;
   }

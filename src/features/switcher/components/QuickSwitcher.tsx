@@ -38,7 +38,7 @@ function SwitcherPanel() {
         role="dialog"
         aria-label="Search docs"
         onPointerDown={(event) => event.stopPropagation()}
-        className="glass glass-enter flex h-fit max-h-[60vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl"
+        className="glass glass-solid glass-enter flex h-fit max-h-[60vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl"
       >
         <label className="flex items-center gap-2.5 border-b border-line px-4">
           <SearchIcon className="text-faint" />
