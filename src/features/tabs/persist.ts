@@ -1,6 +1,7 @@
 import { debounce } from "@/lib/debounce";
 import { onPageLeave } from "@/lib/pageLifecycle";
 import { saveTabs, setMeta } from "@/features/storage/repository";
+import type { Tab } from "./lib/tree";
 import { ACTIVE_TAB_KEY, useTabsStore } from "./store";
 
 const SAVE_DELAY_MS = 500;
@@ -12,11 +13,21 @@ const SAVE_DELAY_MS = 500;
  * Returns a cleanup function for the effect that starts it.
  */
 export function startTabPersistence(): () => void {
-  const saveTree = debounce(saveTabs, SAVE_DELAY_MS);
+  // Tabs removed since the last write. Collected across the debounce so none are missed.
+  const removed = new Set<string>();
+  const saveTree = debounce((tabs: Tab[]) => {
+    const ids = [...removed];
+    removed.clear();
+    saveTabs(tabs, ids).catch((error) => console.warn("Could not save the tab tree", error));
+  }, SAVE_DELAY_MS);
 
   const unsubscribe = useTabsStore.subscribe((state, previous) => {
     if (!state.ready) return;
-    if (state.tabs !== previous.tabs) saveTree(state.tabs);
+    if (state.tabs !== previous.tabs) {
+      const alive = new Set(state.tabs.map((tab) => tab.id));
+      for (const tab of previous.tabs) if (!alive.has(tab.id)) removed.add(tab.id);
+      saveTree(state.tabs);
+    }
     if (state.activeId !== previous.activeId && state.activeId) void setMeta(ACTIVE_TAB_KEY, state.activeId);
   });
 

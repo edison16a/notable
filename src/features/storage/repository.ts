@@ -25,19 +25,17 @@ export async function loadTabs(): Promise<TabRecord[]> {
 }
 
 /**
- * Writes the whole tab list and removes rows that no longer exist, along with
- * their docs. Trees are small (hundreds of rows at most), so a full sync in
- * one transaction is simpler and safer than tracking individual edits.
+ * Writes the tab list, and deletes only the tabs (and their docs) that this
+ * window removed on purpose. It must not delete "every row I do not know
+ * about": with Notable open in two browser tabs, the other one may have just
+ * created rows this window has never seen.
  */
-export async function saveTabs(tabs: TabRecord[]): Promise<void> {
+export async function saveTabs(tabs: TabRecord[], removedIds: string[] = []): Promise<void> {
   const db = getDb();
   await db.transaction("rw", db.tabs, db.docs, async () => {
-    const keep = new Set(tabs.map((tab) => tab.id));
-    const existing = await db.tabs.toCollection().primaryKeys();
-    const removed = existing.filter((id) => !keep.has(id));
-    if (removed.length) {
-      await db.tabs.bulkDelete(removed);
-      await db.docs.bulkDelete(removed);
+    if (removedIds.length) {
+      await db.tabs.bulkDelete(removedIds);
+      await db.docs.bulkDelete(removedIds);
     }
     await db.tabs.bulkPut(tabs);
   });
