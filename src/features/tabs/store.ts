@@ -34,8 +34,9 @@ export const useTabsStore = create<TabsState>((set, get) => ({
     let tabs = await loadTabs();
     if (!tabs.length) tabs = [tree.createTab(createId(), null, 0)];
     const savedActive = await getMeta<string>(ACTIVE_TAB_KEY);
-    const activeId = tabs.some((tab) => tab.id === savedActive) ? savedActive! : tree.visibleRows(tabs)[0].tab.id;
-    set({ tabs: tree.revealTab(tabs, activeId), activeId, ready: true });
+    const activeId = tabs.some((tab) => tab.id === savedActive) ? savedActive! : (tree.visibleRows(tabs)[0]?.tab.id ?? tabs[0].id);
+    // Folds are restored exactly as they were left, even if the active doc sits inside a folded tab.
+    set({ tabs, activeId, ready: true });
   },
 
   addTab(parentId) {
