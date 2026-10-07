@@ -36,7 +36,8 @@ export function useTabDrag() {
     draggable: true,
     onDragStart(event: DragEvent<HTMLElement>) {
       event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("text/plain", id);
+      // A custom type on purpose. With text/plain, dropping a tab on the editor would paste its id as text.
+      event.dataTransfer.setData("application/x-notable-tab", id);
       setDraggingId(id);
     },
     onDragOver(event: DragEvent<HTMLElement>) {
